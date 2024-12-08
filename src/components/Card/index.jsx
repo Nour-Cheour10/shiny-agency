@@ -1,63 +1,89 @@
 import PropTypes from 'prop-types'
-import DefaultPicture from '../../assets/profil.png'
+import { Component } from 'react'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
+import DefaultPicture from '../../assets/profile.png'
 
 const CardLabel = styled.span`
-  color: #5843e4;
+  color: ${({ theme }) => (theme === 'light' ? colors.primary : '#ffffff')};
   font-size: 22px;
-  padding-bottom: 30px;
+  font-weight: normal;
+  padding-left: 15px;
 `
+
+const CardTitle = styled.div`
+  color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')};
+  font-size: 22px;
+  font-weight: normal;
+  align-self: center;
+  height: 25px;
+  display: flex;
+  align-items: center;
+`
+
 const CardImage = styled.img`
-  height: 100px;
-  width: 100px;
+  height: 150px;
+  width: 150px;
+  align-self: center;
   border-radius: 50%;
-  display: block;
-  margin: 0 auto;
 `
+
 const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   padding: 15px;
-  background-color: ${colors.backgroundLight};
+  background-color: ${({ theme }) =>
+    theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
   border-radius: 30px;
-  width: 350px;
-  margin: 0 auto;
-  transition: 200ms;
+  width: 300px;
+  height: 300px;
   &:hover {
     cursor: pointer;
-    box-shadow: 2px 2px 10px #e2e3e9;
   }
 `
-const CardTitle = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
-`
 
-function Card({ label, title, picture }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', padding: 15 }}>
-      <CardWrapper>
-        <CardLabel>{label}</CardLabel>
+class Card extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isFavorite: false,
+    }
+  }
+
+  setFavorite = () => {
+    this.setState({ isFavorite: !this.state.isFavorite })
+  }
+
+  render() {
+    const { theme, picture, label, title } = this.props
+    const { isFavorite } = this.state
+    const star = isFavorite ? '⭐️' : ''
+
+    return (
+      <CardWrapper theme={theme} onClick={this.setFavorite}>
+        <CardLabel theme={theme}>{label}</CardLabel>
         <CardImage src={picture} alt="freelance" />
-        <CardTitle>{title}</CardTitle>
+        <CardTitle theme={theme}>
+          {star} {title} {star}
+        </CardTitle>
       </CardWrapper>
-    </div>
-  )
+    )
+  }
 }
 
 Card.propTypes = {
   label: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   picture: PropTypes.string.isRequired,
+  theme: PropTypes.string.isRequired,
 }
 
 Card.defaultProps = {
-  label: 'genyour',
-  title: 'Mon titre par défaut',
+  label: '',
+  title: '',
   picture: DefaultPicture,
+  theme: 'light',
 }
 
 export default Card

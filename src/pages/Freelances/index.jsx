@@ -56,7 +56,7 @@ function Freelances() {
       </PageSubtitle>
       {isLoading ? (
         <LoaderWrapper>
-          <Loader />
+          <Loader theme={theme} data-testid="loader" />
         </LoaderWrapper>
       ) : (
         <CardsContainer>
